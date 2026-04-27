@@ -21,8 +21,8 @@ export const createCalcado = async (req: Request, res: Response) => {
 
         }
 
-        // // Salva o novo calçado no banco de dados
-        const calcado = await prisma.calcado.create({
+        // Salva o novo calçado no banco de dados
+        await prisma.calcado.create({
             data: {
                 nome_produto,
                 cor,
@@ -77,19 +77,31 @@ export const readAllCalcados = async (req: Request, res: Response) => {
 
 // extra: GET por id do calçado
 export const readCalcadoById = async (req: Request, res: Response) => {
-    const {id} = req.params;
+    try{
+        const {id} = req.params;
 
-    const calcado = await prisma.calcado.findUnique({
-        where: {id: Number(id)}
-    });
-
-    if (!calcado) {
-        return res.status(404).json({
-            message: "Calçado não encontrado."
+        // Busca o calçado no banco
+        const calcado = await prisma.calcado.findUnique({
+            where: {id: Number(id)}
         });
-    }
 
-    return res.status(200).json(calcado);
+        // Verifica se o calçado existe
+        if (!calcado) {
+            return res.status(404).json({
+                message: "Calçado não encontrado."
+            });
+        }
+
+        return res.status(200).json(calcado);
+
+
+    }catch (error){
+        return res.status(500).json({
+            message: "Erro ao buscar calçado.",
+            error,
+        })
+    }
+    
 }
 
 
@@ -182,15 +194,20 @@ export const deleteCalcado = async (req: Request, res: Response) => {
         // Será preciso do id do calçado para deletá-lo 
         const {id} = req.params;
 
+        // Busca o calçado no banco antes de deletar
+        const calcadoExistente = await prisma.calcado.findUnique({
+            where: {id: Number(id)}
+        })
+
         // Verifica se o calçado a ser deletado realmente existe
-        if (!id){
+        if (!calcadoExistente) {
             return res.status(404).json({
                 message: "Calçado não encontrado."
             })
         }
 
         // Remove o registro do banco
-        const calcado = await prisma.calcado.delete({
+        await prisma.calcado.delete({
             where: {id: Number(id)}
         })
 

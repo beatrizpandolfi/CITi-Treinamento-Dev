@@ -1,6 +1,5 @@
 import express from "express";
 import {  readAllUsers } from "./controllers/UserController";
-import { create } from "domain";
 import {createCalcado, deleteCalcado, readAllCalcados, updateCalcado} from "./controllers/CalcadosController";
 import {readCalcadosByTamanho, readCalcadosByMarca, readTotalEstoque} from "./controllers/CalcadosExtraController";
 

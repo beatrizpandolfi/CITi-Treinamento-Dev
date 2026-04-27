@@ -134,7 +134,7 @@ server/
  ├── prisma/
  ├── src/
  │    ├── controllers/
- │    ├── repositories/
+ │    ├── repositorie/
  │    ├── database/
  │    ├── global/
  │    ├── routes.ts
